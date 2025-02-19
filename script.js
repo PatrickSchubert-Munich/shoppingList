@@ -91,48 +91,40 @@ function clearItems() {
 }
 
 function checkUI() {
-  // It´s neccessary to check here in the local scope (every time)
-  if (document.querySelectorAll("#item-list li").length > 0) {
-    clearBtn.style.display = "block";
-    itemFilter.style.display = "block";
-  } else {
-    clearBtn.style.display = "none";
-    itemFilter.style.display = "none";
-  }
+  const hasItems = document.querySelector("#item-list li") !== null;
+  const displayValue = hasItems ? "block" : "none";
+  clearBtn.style.display = displayValue;
+  itemFilter.style.display = displayValue;
 }
 
 function filterItems(event) {
   const text = event.target.value.toLowerCase();
-  const shoppingItems = document.querySelectorAll("#item-list li");
-  shoppingItems.forEach((item) => {
-    const itemName = item.firstChild.textContent.toLowerCase();
-    if (itemName.includes(text)) {
-      item.style.display = "flex";
-    } else {
-      item.style.display = "none";
-    }
+  document.querySelectorAll("#item-list li").forEach((item) => {
+    const itemName = item.textContent.toLowerCase();
+    item.style.display = itemName.includes(text) ? "flex" : "none";
   });
 }
 
 function setToLocalStorage(key, value) {
-  if (value && key && typeof key === "string") {
-    const stringifiedItem = JSON.stringify(value);
-    localStorage.setItem(key, stringifiedItem);
-    console.info(`write ${stringifiedItem} to local storage`);
+  if (typeof key === "string" && key && value !== undefined) {
+    try {
+      const stringifiedItem = JSON.stringify(value);
+      localStorage.setItem(key, stringifiedItem);
+      console.info(`write ${stringifiedItem} to local storage`);
+    } catch (e) {
+      console.error("Failed to stringify value:", e);
+    }
   } else {
     console.info("Please try again with correct key-value pair");
   }
 }
 
-function getFromLocalStorage(getItem) {
-  let parsedItem;
-  if (getItem && typeof itemToStore === "string") {
-    const itemFromStorage = localStorage.getItem(getItem);
-    parsedItem = JSON.parse(itemFromStorage);
-  } else {
-    throw Error("Please try to get an item");
+function getFromLocalStorage(key) {
+  if (typeof key !== "string") {
+    throw new Error("The key must be a string");
   }
-  return parsedItem;
+  const itemFromStorage = localStorage.getItem(key);
+  return itemFromStorage ? JSON.parse(itemFromStorage) : null;
 }
 
 // Event-Listeners
