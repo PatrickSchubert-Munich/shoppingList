@@ -9,6 +9,16 @@ const itemFilter = document.querySelector(".form-input-filter");
 // local storage item name
 const nameOfShoppingList = "my_shopping_list";
 
+function displayItems() {
+  const itemsToDisplay = getItemsFromStorage(nameOfShoppingList);
+  itemsToDisplay.forEach((item) => {
+    createNewDomItem(item);
+  });
+
+  // check amount of items gt zero
+  checkUI();
+}
+
 function addItem(event) {
   // prevent sending form action
   event.preventDefault();
@@ -112,18 +122,16 @@ function filterItems(event) {
 }
 
 function addItemToStorage(newItem) {
-  const shoppingList = getItemFromStorage(nameOfShoppingList) || [];
+  const shoppingList = getItemsFromStorage(nameOfShoppingList);
   shoppingList.push(newItem);
   localStorage.setItem(nameOfShoppingList, JSON.stringify(shoppingList));
 }
 
-function getItemFromStorage(key) {
+function getItemsFromStorage(key) {
   if (typeof key !== "string") {
     throw new Error("The key must be a string");
   }
-
-  const item = localStorage.getItem(key);
-  return item ? JSON.parse(item) : null;
+  return JSON.parse(localStorage.getItem(key)) || [];
 }
 
 // Event-Listeners
@@ -131,3 +139,4 @@ itemForm.addEventListener("submit", addItem);
 itemList.addEventListener("click", removeItem);
 clearBtn.addEventListener("click", clearItems);
 itemFilter.addEventListener("input", filterItems);
+document.addEventListener("DOMContentLoaded", displayItems);
