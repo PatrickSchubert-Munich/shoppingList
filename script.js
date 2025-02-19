@@ -134,9 +134,14 @@ function getItemsFromStorage(key) {
   return JSON.parse(localStorage.getItem(key)) || [];
 }
 
-// Event-Listeners
-itemForm.addEventListener("submit", addItem);
-itemList.addEventListener("click", removeItem);
-clearBtn.addEventListener("click", clearItems);
-itemFilter.addEventListener("input", filterItems);
-document.addEventListener("DOMContentLoaded", displayItems);
+function init() {
+  // initial load when DOM is loaded
+  // Event-Listeners
+  itemForm.addEventListener("submit", addItem);
+  itemList.addEventListener("click", removeItem);
+  clearBtn.addEventListener("click", clearItems);
+  itemFilter.addEventListener("input", filterItems);
+  document.addEventListener("DOMContentLoaded", displayItems);
+}
+
+init();
